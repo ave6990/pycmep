@@ -1,0 +1,176 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="author" content="Aleksandr Ermolaev">
+    <meta name="e-mail" content="ave6990@ya.ru">
+    <meta name="version" content="2024-02-12">
+    <title>
+      pycMep
+    </title>
+    <style type="text/css">
+      html {
+        color: #393939;
+        font: 40pt sans-serif;
+		font-weight: bold;
+      }
+	  hr {
+		border: 5px solid lightgray;
+      }
+	  h1, h2, h3 {
+		text-align: center;
+	  }
+      table {
+        border: 1px solid lightgray;
+        border-collapse: collapse;
+        margin: 4pt 0;
+        width: 100%;
+      }
+      th, td {
+        padding: 20pt 10pt;
+        border: 1px solid lightgray;
+      }
+	  th {
+	  text-align: left;
+		width: 25%;
+      }
+	  footer {
+		text-align: center;
+		font-size: 55pt;
+	  }
+	  img {
+		align: center;
+	  }
+	  #stamp {
+		width: 100pt;
+		height: 100pt;
+	  }
+	  #engineer {
+		text-align: right;
+		border-bottom: 2px solid black;
+	  }
+	  #picture {
+		text-align: center;
+	  }
+    </style>
+
+  </head>
+  <body>
+    <header>
+      <h1>Международная выставка-форум<br>«РОССИЯ»</h1>
+      <h2>ФБУ «Оренбургский ЦСМ»</h2>
+	  <hr>
+    </header>
+    <main>
+	  <h2>Серификат о метрологическом контроле состояния</h2>
+	  <h3>№ МКС-<span id="number" contenteditable="true">0</span>-2024 от <datetime id="date">12.02.2024</datetime></h3>
+      <p id="picture"><img id="button" src="./units.jpg"></p>
+      <table>
+        <tr>
+          <th>Имя:</th>
+          <td class="field" id="name" contenteditable="true"></td>
+        </tr>
+        <tr>
+          <th>Рост:</th>
+          <td class="field" id="height" contenteditable="true"></td>
+        <tr>
+          <th>Вес:</th>
+          <td class="field" id="weight" contenteditable="true"></td>
+        </tr>
+          <th>Сила:</th>
+          <td class="field" id="force" contenteditable="true"></td>
+        </tr>
+      </table>
+	  <p id="stamp"></p>
+      <p>Измерения провел:</p>
+	  <p id="engineer" contenteditable="true">Стрелец-Молодец</p>
+	  <hr>
+    </main>
+    <footer>
+      Москва 2024
+    </footer>
+	    <script>
+      
+		const heightUnits = {sagen: 1 / 176,
+		 arshin: 1 / 71.12,
+		 shag: 1 / 71,
+		 locot: 1 / 45,
+		 //fut: 1 / 30.48,
+		 pjad: 1 / 17.78,
+		 ladon: 1 / 7.5,
+		 vershok: 1 / 4.44,
+		 perst: 1 / 2,
+		}
+		
+		const sHeightUnits = {sagen: ["маховая сажень", "маховые сажени", "маховых саженей"],
+			arshin: ["аршин", "аршина", "аршинов"],
+			shag: ["шаг", "шага", "шагов"],
+			locot: ["локоть", "локтя", "локтей"],
+			//fut: ["фут", "фута", "футов"],
+			pjad: ["пядь", "пяди", "пядей"],
+			ladon: ["ладонь", "ладони", "ладоней"],
+			vershok: ["вершок", "вершка", "вершков"],
+			perst: ["перст", "перста", "перстов"],}
+			
+		const weightUnits = {
+			pud: 1 / 16.38,
+			batman: 1 / 4.095,
+			besmen: 1 / 1.022,
+			funt: 1 / 0.4095,
+			polugrivennik: 1 / 0.1024,
+			lot: 1 / 0.0128,
+			zolotnik: 1 / 0.004266,
+		}
+		
+		const sWeightUnits = {
+			pud: ["пуд", "пуда", "пудов"],
+			batman: ["батман", "батмана", "батманов"],
+			besmen: ["безмен", "безмена", "безменов"],
+			funt: ["фунт", "фунта", "фунтов"],
+			polugrivennik: ["полугривенник", "полугривенника", "полугривенников"],
+			lot: ["лот", "лота", "лотов"],
+			zolotnik: ["золотник", "золотника", "золотников"],
+		}
+			
+	  const force = document.getElementById("force")
+	  const button = document.getElementById('button')
+	  
+	  button.addEventListener('click', () => {
+		const number = document.getElementById("number")
+		const date = document.getElementById("date")
+		const height = document.getElementById("height")
+		const weight = document.getElementById("weight")
+		const dateVal = new Date()
+		number.innerHTML = parseInt(number.innerHTML) + 1
+		date.innerHTML = dateVal.toLocaleDateString()
+		height.innerHTML = Converter(height.innerHTML, heightUnits, sHeightUnits)
+		weight.innerHTML = Converter(weight.innerHTML, weightUnits, sWeightUnits)
+	  })
+	  
+	  const Converter = (val, units, sUnits) => {
+		let res = ''
+		
+		for (unit of Object.keys(units)) {
+			const v = Math.floor(val * units[unit])
+			if (v > 0) {
+				res = `${res} ${v} ${sUnits[unit][cnt(v)]}`
+			}
+			val = val - v / units[unit]
+		}
+		
+		return res
+	  }
+	  
+	  const cnt = (val) => {
+		if (10 <= val && val <= 20) {
+			return 2
+		}
+		if ((val % 10) == 1) {
+			return 0
+		}
+		return 1
+	  }
+    </script>
+  </body>
+</html>
